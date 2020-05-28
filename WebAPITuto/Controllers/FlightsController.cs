@@ -24,14 +24,14 @@ namespace WebAPITuto.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Flight>>> GetFlights()
         {
-            return await _context.Flights.ToListAsync();
+            return await _context.FlightSet.ToListAsync();
         }
 
         // GET: api/Flights/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Flight>> GetFlight(int id)
         {
-            var flight = await _context.Flights.FindAsync(id);
+            var flight = await _context.FlightSet.FindAsync(id);
 
             if (flight == null)
             {
@@ -79,7 +79,7 @@ namespace WebAPITuto.Controllers
         [HttpPost]
         public async Task<ActionResult<Flight>> PostFlight(Flight flight)
         {
-            _context.Flights.Add(flight);
+            _context.FlightSet.Add(flight);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetFlight", new { id = flight.FlightNo }, flight);
@@ -89,13 +89,13 @@ namespace WebAPITuto.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Flight>> DeleteFlight(int id)
         {
-            var flight = await _context.Flights.FindAsync(id);
+            var flight = await _context.FlightSet.FindAsync(id);
             if (flight == null)
             {
                 return NotFound();
             }
 
-            _context.Flights.Remove(flight);
+            _context.FlightSet.Remove(flight);
             await _context.SaveChangesAsync();
 
             return flight;
@@ -103,7 +103,7 @@ namespace WebAPITuto.Controllers
 
         private bool FlightExists(int id)
         {
-            return _context.Flights.Any(e => e.FlightNo == id);
+            return _context.FlightSet.Any(e => e.FlightNo == id);
         }
     }
 }

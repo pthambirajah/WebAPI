@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using WebAPITuto.Models;
+using Microsoft.AspNetCore.Server.IIS.Core;
 
 namespace WebAPITuto
 {
@@ -19,11 +20,16 @@ namespace WebAPITuto
         }
 
         public IConfiguration Configuration { get; }
-
+        public static string ConnectionString { get; set; } = @"Server=(localDB)\MSSQLLocalDB;Database=WWWings_2020Step2;Trusted_Connection=True;MultipleActiveResultSets=True;App=WebAPITuto";
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TodoContext>(opt=>opt.UseInMemoryDatabase("TodoList"));
+
+            services.AddDbContext<TodoContext>();
+
+           // services.AddDbContext<UserDbContext>(opts =>
+         //opts.UseInMemoryDatabase("userDB"));
+
             services.AddControllers();
         }
 
