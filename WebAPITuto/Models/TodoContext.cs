@@ -19,9 +19,12 @@ namespace WebAPITuto.Models
 
         //public DbSet<ToDoItem> ToDoItems { get; set; }
         public DbSet<Flight> FlightSet { get; set; }
-        public DbSet<Passenger> Passengers { get; set; }
+       public DbSet<Passenger> Passengers { get; set; }
+        public DbSet<Booking> BookingSet { get; set; }
+        //public DbSet<Passenger> PassengerSet { get; set; }
 
-        public static string ConnectionString { get; set; } = @"Server=(localDB)\MSSQLLocalDB;Database=WWWings_2020Step2;Trusted_Connection=True;MultipleActiveResultSets=True;App=WebAPITuto";
+
+        public static string ConnectionString { get; set; } = @"Server=(localDB)\MSSQLLocalDB;Database=WWWings_2020Step4;Trusted_Connection=True;MultipleActiveResultSets=True;App=WebAPITuto";
 
        protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
