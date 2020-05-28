@@ -31,5 +31,25 @@ namespace WebAPITuto.Models
             // convinient, flexible BUT DANGEROUS FOR PERFORMANCE
             //builder.UseLazyLoadingProxies();
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+
+            // composed
+            builder.Entity<Booking>().HasKey(x => new { x.FlightNo, x.PassengerID });
+
+            // mapping many to many relationship
+            builder.Entity<Booking>()
+                .HasOne(x => x.Flight)
+                .WithMany(x => x.BookingSet)
+                .HasForeignKey(x => x.FlightNo)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Booking>()
+                .HasOne(x => x.Passenger)
+                .WithMany(x => x.BookingSet)
+                .HasForeignKey(x => x.PassengerID)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }

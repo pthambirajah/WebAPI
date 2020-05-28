@@ -23,5 +23,8 @@ namespace WebAPITuto.Models
 
         [Required]
         public short? Seats { get; set; }
+
+        public virtual ICollection<Booking> BookingSet { get; set; }
+
     }
 }

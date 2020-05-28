@@ -14,5 +14,8 @@ namespace WebAPITuto.Models
         public string Surname { get; set; }
 
         public string GivenName { get; set; }
+
+        public virtual ICollection<Booking> BookingSet { get; set; }
+
     }
 }
