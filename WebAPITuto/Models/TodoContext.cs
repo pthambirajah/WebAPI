@@ -17,29 +17,21 @@ namespace WebAPITuto.Models
 
         }
 
-        //public DbSet<ToDoItem> ToDoItems { get; set; }
         public DbSet<Flight> FlightSet { get; set; }
-       public DbSet<Passenger> Passengers { get; set; }
+        public DbSet<Passenger> Passengers { get; set; }
         public DbSet<Booking> BookingSet { get; set; }
-        //public DbSet<Passenger> PassengerSet { get; set; }
 
-
-        public static string ConnectionString { get; set; } = @"Server=(localDB)\MSSQLLocalDB;Database=WWWings_2020Step4;Trusted_Connection=True;MultipleActiveResultSets=True;App=WebAPITuto";
+        public static string ConnectionString { get; set; } = @"Server=(localDB)\MSSQLLocalDB;Database=WWWings_2020Step8;Trusted_Connection=True;MultipleActiveResultSets=True;App=WebAPITuto";
 
        protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-           
-                builder.UseSqlServer(ConnectionString);
-            
-            // convinient, flexible BUT DANGEROUS FOR PERFORMANCE
-            //builder.UseLazyLoadingProxies();
+             builder.UseSqlServer(ConnectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-
             // composed
-            builder.Entity<Booking>().HasKey(x => new { x.FlightNo, x.PassengerID });
+            builder.Entity<Booking>().HasKey(x => new { x.FlightNo, x.PersonID });
 
             // mapping many to many relationship
             builder.Entity<Booking>()
@@ -51,7 +43,7 @@ namespace WebAPITuto.Models
             builder.Entity<Booking>()
                 .HasOne(x => x.Passenger)
                 .WithMany(x => x.BookingSet)
-                .HasForeignKey(x => x.PassengerID)
+                .HasForeignKey(x => x.PersonID)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

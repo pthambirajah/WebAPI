@@ -9,7 +9,9 @@ namespace WebAPITuto.Models
     {
         // flight - passenger
         public int FlightNo { get; set; }
-        public int PassengerID { get; set; }
+        public int PersonID { get; set; }
+
+        public double SalePrice { get; set; }
 
         public virtual Flight Flight { get; set; }
         public virtual Passenger Passenger { get; set; }

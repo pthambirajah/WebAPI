@@ -24,7 +24,17 @@ namespace WebAPITuto.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Flight>>> GetFlights()
         {
-            return await _context.FlightSet.ToListAsync();
+
+            var b = await _context.FlightSet.Include(x => x.BookingSet).ToListAsync();
+            
+            foreach (Flight f in b)
+            {
+               foreach(Booking b2 in f.BookingSet)
+                {
+                    b2.Flight = null;
+                }
+            }
+            return b;
         }
 
         // GET: api/Flights/5
@@ -39,6 +49,43 @@ namespace WebAPITuto.Controllers
             }
 
             return flight;
+        }
+
+        // GET: api/Flights/5
+        [HttpGet("Price/{id}")]
+        public double GetFlightPrice(int id)
+        {
+             var flight =  _context.FlightSet.Find(id);
+
+             if (flight == null)
+             {
+                 return 99999;
+             }
+            double FillRate = (double)flight.AvailableSeats / (double)flight.Seats;
+             if (FillRate < 0.2d)
+             {
+                return (double)flight.basePrice * 1.5;
+                
+             }
+             //int result = DateTime.Compare(flight.Date, DateTime.Now);
+
+             int days = (flight.Date - DateTime.Now).Days;
+
+             if (FillRate > 0.8 && days < 60)
+             {
+                return (double)flight.basePrice * 0.8;
+              
+             }
+
+             if (FillRate > 0.5 && days < 30)
+             {
+                return (double)flight.basePrice * 0.7;
+                
+             }
+
+            return (double)flight.basePrice;
+      
+          
         }
 
         // PUT: api/Flights/5
