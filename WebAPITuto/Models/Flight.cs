@@ -23,7 +23,8 @@ namespace WebAPITuto.Models
 
         [Required]
         public short? Seats { get; set; }
-
+        
+        //A supprimer et recréer la BD
         public short? AvailableSeats { get; set; }
 
         [Required]

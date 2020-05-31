@@ -25,15 +25,40 @@ namespace WebAPITuto.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Booking>>> GetBookingSet()
         {
-            var f =  await _context.BookingSet.Include(x => x.Flight).ToListAsync();
+            var f =  await _context.BookingSet.Include(x => x.Flight).Include(x => x.Passenger).ToListAsync();
 
             //This is used to stop from escalating
             //booking contains flight which contains bookings which contains flight...
             foreach(Booking b in f)
             {
                 b.Flight.BookingSet = null;
+                b.Passenger.BookingSet = null;
             }
             return f;
+        }
+
+        
+        // GET: api/Bookings/Destination/destination
+        [HttpGet("Destination/{destination}")]
+        public List<Ticket> GetAllBookingsDestination(string Destination)
+        {
+            var flight = from f in _context.FlightSet
+                         where f.Destination.Equals(Destination)
+                         select f;
+            
+            var FinalTickets = new List<Ticket>();
+
+         foreach (Flight f in flight)
+            {
+                var bookings = (from b in _context.BookingSet
+                                where b.FlightNo == f.FlightNo
+                                select new Ticket { FlightNo = b.FlightNo, GivenName = b.Passenger.GivenName, Surname = b.Passenger.Surname, SalePrice = b.SalePrice }).ToList();
+                foreach (Ticket ticket in bookings)
+                {
+                    FinalTickets.Add(ticket);
+                }
+            }
+            return FinalTickets;
         }
 
         // GET: api/Bookings/5
@@ -48,34 +73,6 @@ namespace WebAPITuto.Controllers
             }
 
             return booking;
-        }
-        // GET: api/Bookings/5
-        [HttpGet("Destination/{destination}")]
-        //public async Task<ActionResult<Booking>> GetAllBookingsDestination(string Destination)
-        //        public async Task<ActionResult<Booking>> GetAllBookingsDestination(string Destination)
-        public List<Ticket> GetAllBookingsDestination(string Destination)
-        {
-            var flight = from f in _context.FlightSet
-                         where f.Destination.Equals(Destination)
-                         select f;
-            
-            var FinalTickets = new List<Ticket>();
-
-         foreach (Flight f in flight)
-            {
-                // var bookings = _context.BookingSet;
-                /*from b in _context.BookingSet
-                           where b.FlightNo == f.FlightNo
-                            select b;*/
-                var bookings = (from b in _context.BookingSet
-                                where b.FlightNo == f.FlightNo
-                                select new Ticket { FlightNo = b.FlightNo, GivenName = b.Passenger.GivenName, Surname = b.Passenger.Surname, SalePrice = b.SalePrice }).ToList();
-                foreach (Ticket ticket in bookings)
-                {
-                    FinalTickets.Add(ticket);
-                }
-            }
-            return FinalTickets;
         }
 
         // PUT: api/Bookings/5
@@ -116,8 +113,10 @@ namespace WebAPITuto.Controllers
         [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(Booking booking)
         {
+            
             _context.BookingSet.Add(booking);
-            try
+            
+           try
             {
                 await _context.SaveChangesAsync();
             }
@@ -125,7 +124,10 @@ namespace WebAPITuto.Controllers
             {
                 if (BookingExists(booking.FlightNo))
                 {
-                    return Conflict();
+                    if (BookingExists(booking.PersonID))
+                    {
+                        return Conflict();
+                    }
                 }
                 else
                 {

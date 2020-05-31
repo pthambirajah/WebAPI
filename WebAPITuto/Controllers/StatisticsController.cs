@@ -21,14 +21,21 @@ namespace WebAPITuto.Controllers
         }
 
         // GET: api/Statistics
+        //Get all available flights
         [HttpGet]
         public async Task<ActionResult<List<Flight>>> GetFlightSet()
         {
             
             List<Flight> flights = new List<Flight>();
+
             foreach (Flight flight in _context.FlightSet)
             {
-                if (flight.AvailableSeats > 0)
+                int numberOfBookings = 0;
+                foreach (Booking book in flight.BookingSet)
+                {
+                    numberOfBookings++;
+                }
+                if (numberOfBookings < flight.Seats)
                 {
                     flights.Add(flight);
                 }

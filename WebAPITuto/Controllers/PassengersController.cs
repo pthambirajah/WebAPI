@@ -27,6 +27,23 @@ namespace WebAPITuto.Controllers
             return await _context.Passengers.ToListAsync();
         }
 
+        // GET: api/Passengers
+        [HttpGet("Last/")]
+        public string GetPassengerID()
+        {
+            var result = from p in _context.Passengers
+                         select p;
+            int passengerID = 0;
+            foreach(Passenger passenger in result)
+            {
+                if(passenger.PersonID > passengerID)
+                {
+                    passengerID = passenger.PersonID;
+                }
+            }
+            return passengerID.ToString();
+        }
+
         // GET: api/Passengers/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Passenger>> GetPassenger(int id)
