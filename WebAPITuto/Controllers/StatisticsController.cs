@@ -53,7 +53,7 @@ namespace WebAPITuto.Controllers
 
             double TotalSalePrice = 0;
             int NumberOfBookings = 0;
-           foreach(Flight f in flight)
+           foreach(Boeing f in flight)
             {
                 var bookings = from b in _context.BookingSet
                                where b.FlightNo == f.FlightNo

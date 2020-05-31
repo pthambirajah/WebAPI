@@ -26,8 +26,9 @@ namespace WebAPITuto.Controllers
         {
 
             var b = await _context.FlightSet.Include(x => x.BookingSet).ToListAsync();
+            //var b = await _context.FlightSet.ToListAsync();
 
-           
+
 
             //This is used to stop from escalating
             //booking contains flight which contains bookings which contains flight...
@@ -99,7 +100,7 @@ namespace WebAPITuto.Controllers
             //If the airplane is more than 80% full regardless of the date:
             if (FillRate < 0.2d)
              {
-                return (double)flight.basePrice * 1.5;
+                return (double)flight.BasePrice * 1.5;
              }
              
              //calculates number of dates between departure and today
@@ -108,16 +109,16 @@ namespace WebAPITuto.Controllers
             //If the plane is filled less than 20% less than 2 months before departure
             if (FillRate > 0.8 && days < 60)
              {
-                return (double)flight.basePrice * 0.8; 
+                return (double)flight.BasePrice * 0.8; 
              }
 
             //If the plane is filled less than 50% less than 1 month before departure
             if (FillRate > 0.5 && days < 30)
              {
-                return (double)flight.basePrice * 0.7;
+                return (double)flight.BasePrice * 0.7;
              }
 
-            return (double)flight.basePrice;
+            return (double)flight.BasePrice;
       
         }
 

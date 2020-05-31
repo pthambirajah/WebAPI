@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using WebAPITuto.Models;
+using WebAPITuto.Models.Factory;
 
 namespace WebAPITuto
 {
@@ -51,15 +52,24 @@ namespace WebAPITuto
 
         private static void NewFlights()
         {
+            
             using (var ctx = new TodoContext())
             {
-                Flight flight3 = new Flight { Departure = "GVA", Destination = "MLN", Seats = 350, Date = new DateTime(2020, 05, 31), basePrice = 250 };
-                Flight flight4 = new Flight { Departure = "GVA", Destination = "LAX", Seats = 350, Date = new DateTime(2020, 05, 31), basePrice = 250 };
-                Flight flight5 = new Flight { Departure = "LAX", Destination = "GVA", Seats = 2, Date = new DateTime(2020, 05, 31), basePrice = 250 };
+                /*FlightFactory flight3 = new BoeingFactory { Departure = "GVA", Destination = "MLN", Date = new DateTime(2020, 05, 31), basePrice = 250 };
+                FlightFactory flight4 = new BoeingFactory { Departure = "GVA", Destination = "LAX",  Date = new DateTime(2020, 05, 31), basePrice = 250 };
+                FlightFactory flight5 = new BoeingFactory { Departure = "LAX", Destination = "GVA",  Date = new DateTime(2020, 05, 31), basePrice = 250 };
+                FlightFactory flight31 = new BoeingFactory { Departure = "GVA", Destination = "LAX", Date = new DateTime(2021, 03, 21), basePrice = 1 };*/
+                FlightFactory flight31 = new BoeingFactory ("GVA", "LAX", new DateTime(2020, 06, 21), 23);
+                Flight flight4 = flight31.GetFlight();
 
-                ctx.FlightSet.Add(flight3);
+                flight4.Departure = "LAX";
+                flight4.Destination = "GVA";
+                flight4.Date = new DateTime(2021, 03, 21);
+                flight4.BasePrice = 999;
+
+                //ctx.FlightSet.Add(flight31);
                 ctx.FlightSet.Add(flight4);
-                ctx.FlightSet.Add(flight5);
+                //ctx.FlightSet.Add(flight5);
 
                 ctx.SaveChanges();
             }
@@ -69,46 +79,44 @@ namespace WebAPITuto
         {
             using (var ctx = new TodoContext())
             {
+
+
                 Flight f = ctx.FlightSet.Find(1);
                 Flight f1 = ctx.FlightSet.Find(2);
-                Flight f5 = ctx.FlightSet.Find(3);
-
+                
                 Passenger p = ctx.Passengers.Find(1);
                 Passenger p2 = ctx.Passengers.Find(2);
-                Passenger p3 = ctx.Passengers.Find(3);
 
                 Booking a = new Booking { Flight = f1, Passenger = p2, PersonID = p2.PersonID, FlightNo = f1.FlightNo, SalePrice = 888 };
                 ctx.BookingSet.Add(a);
-                f1.BookingSet.Add(a);
-                p2.BookingSet.Add(a);
+
 
 
 
                 Booking b = new Booking { PersonID = p.PersonID, FlightNo = f.FlightNo, Flight = f, Passenger = p, SalePrice = 100 };
-                Booking c = new Booking { PersonID = p3.PersonID, FlightNo = f.FlightNo, Flight = f, Passenger = p3, SalePrice = 200 };
+                //Booking c = new Booking { PersonID = p3.PersonID, FlightNo = f.FlightNo, Flight = f, Passenger = p3, SalePrice = 200 };
                 //Booking d = new Booking { PersonID = p2.PersonID, FlightNo = f1.FlightNo, Flight = f1, Passenger = p2, SalePrice = 200 };
 
 
 
                 ctx.BookingSet.Add(b);
-                ctx.BookingSet.Add(c);
+                //ctx.BookingSet.Add(c);
                 //ctx.BookingSet.Add(d);
 
 
                 //ctx.Entry(p).Collection(x => x.BookingSet).Load();
                 // lazy loading
 
-                p.BookingSet = new List<Booking>();
-                p.BookingSet.Add(new Booking { FlightNo = 1 });
 
 
 
-                ctx.BookingSet.Add(new Booking { Flight = f5, Passenger = p2, PersonID = p2.PersonID, FlightNo = f5.FlightNo, SalePrice = 758 });
+
+                //ctx.BookingSet.Add(new Booking { Flight = f5, Passenger = p2, PersonID = p2.PersonID, FlightNo = f5.FlightNo, SalePrice = 758 });
 
 
                 ctx.SaveChanges();
 
-
+    
             }
         }
         public static void NewPassengers()
