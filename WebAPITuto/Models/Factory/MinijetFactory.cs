@@ -8,24 +8,25 @@ namespace WebAPITuto.Models.Factory
     class MinijetFactory : FlightFactory
     {
 
-        private string Departure;
-        private string Destination;
-        private DateTime Date;
-        private short? BasePrice;
+        private string _departure;
+        private string _destination;
+        private DateTime _date;
+        private short? _basePrice;
+        private short? _seats;
+        private State _state = null;
 
         public MinijetFactory(string departure, string destination, DateTime date, short? basePrice)
         {
 
-            Departure = departure;
-            Destination = destination;
-            Date = date;
-            BasePrice = basePrice;
+            _departure = departure;
+            _destination = destination;
+            _date = date;
+            _basePrice = basePrice;
         }
-
-        public override Flight GetFlight()
+        
+        public override Flight CreateFlight()
         {
-            return new Minijet(Departure, Destination, Date, BasePrice);
+            return new Minijet(_departure, _destination, _date, _basePrice, 15);
         }
-
     }
 }

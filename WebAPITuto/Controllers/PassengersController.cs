@@ -21,6 +21,7 @@ namespace WebAPITuto.Controllers
         }
 
         // GET: api/Passengers
+        //Default method to get all passengers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Passenger>>> GetPassengers()
         {
@@ -28,6 +29,7 @@ namespace WebAPITuto.Controllers
         }
 
         // GET: api/Passengers
+        //Get the last passenger that has been added
         [HttpGet("Last/")]
         public string GetPassengerID()
         {
@@ -45,6 +47,7 @@ namespace WebAPITuto.Controllers
         }
 
         // GET: api/Passengers/5
+        //Default method to access one passenger
         [HttpGet("{id}")]
         public async Task<ActionResult<Passenger>> GetPassenger(int id)
         {
@@ -61,6 +64,7 @@ namespace WebAPITuto.Controllers
         // PUT: api/Passengers/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        //Default method to update one passenger
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPassenger(int id, Passenger passenger)
         {
@@ -93,6 +97,7 @@ namespace WebAPITuto.Controllers
         // POST: api/Passengers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        //Default method to add one passenger
         [HttpPost]
         public async Task<ActionResult<Passenger>> PostPassenger(Passenger passenger)
         {
@@ -103,6 +108,7 @@ namespace WebAPITuto.Controllers
         }
 
         // DELETE: api/Passengers/5
+        //Default method to delete one passenger
         [HttpDelete("{id}")]
         public async Task<ActionResult<Passenger>> DeletePassenger(int id)
         {
@@ -118,6 +124,7 @@ namespace WebAPITuto.Controllers
             return passenger;
         }
 
+        //Default method to check if a passenger exists
         private bool PassengerExists(int id)
         {
             return _context.Passengers.Any(e => e.PersonID == id);

@@ -7,6 +7,7 @@ namespace WebAPITuto.Models
 {
     public class Ticket
     {
+        //This one has been created to simplify the list of bookings in one row.
         public int FlightNo { get; set; }
          
         public string Surname { get; set; }

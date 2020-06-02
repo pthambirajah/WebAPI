@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -17,7 +18,7 @@ namespace WebAPITuto
         {
             CreateDatabase();
             NewFlights();
-            NewPassengers();
+            //NewPassengers();
             //Delete existing bookings
             using (var ctx = new TodoContext())
             {
@@ -26,8 +27,9 @@ namespace WebAPITuto
                 ctx.SaveChanges();
             }
 
-
             NewBooking();
+
+            //CheckState();
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -52,24 +54,20 @@ namespace WebAPITuto
 
         private static void NewFlights()
         {
-            
             using (var ctx = new TodoContext())
             {
-                /*FlightFactory flight3 = new BoeingFactory { Departure = "GVA", Destination = "MLN", Date = new DateTime(2020, 05, 31), basePrice = 250 };
-                FlightFactory flight4 = new BoeingFactory { Departure = "GVA", Destination = "LAX",  Date = new DateTime(2020, 05, 31), basePrice = 250 };
-                FlightFactory flight5 = new BoeingFactory { Departure = "LAX", Destination = "GVA",  Date = new DateTime(2020, 05, 31), basePrice = 250 };
-                FlightFactory flight31 = new BoeingFactory { Departure = "GVA", Destination = "LAX", Date = new DateTime(2021, 03, 21), basePrice = 1 };*/
-                FlightFactory flight31 = new BoeingFactory ("GVA", "LAX", new DateTime(2020, 06, 21), 23);
-                Flight flight4 = flight31.GetFlight();
+                FlightFactory flightFactory = new BoeingFactory(new PreSaleState());
 
-                flight4.Departure = "LAX";
-                flight4.Destination = "GVA";
-                flight4.Date = new DateTime(2021, 03, 21);
-                flight4.BasePrice = 999;
+                Boeing boeing = (Boeing)flightFactory.CreateFlight();
 
-                //ctx.FlightSet.Add(flight31);
-                ctx.FlightSet.Add(flight4);
-                //ctx.FlightSet.Add(flight5);
+                CheckState(boeing);
+
+                //flightFactory = new BoeingFactory("MTX", "BKK", new DateTime(2020, 07, 1), 199);
+                boeing.OpenSales("MTX", "BKK", new DateTime(2020, 07, 1), 199);
+
+                CheckState(boeing);
+
+                ctx.FlightSet.Add(boeing);
 
                 ctx.SaveChanges();
             }
@@ -79,44 +77,21 @@ namespace WebAPITuto
         {
             using (var ctx = new TodoContext())
             {
-
-
-                Flight f = ctx.FlightSet.Find(1);
+                Flight f = ctx.FlightSet.Find(5);
                 Flight f1 = ctx.FlightSet.Find(2);
-                
+
                 Passenger p = ctx.Passengers.Find(1);
                 Passenger p2 = ctx.Passengers.Find(2);
 
                 Booking a = new Booking { Flight = f1, Passenger = p2, PersonID = p2.PersonID, FlightNo = f1.FlightNo, SalePrice = 888 };
                 ctx.BookingSet.Add(a);
 
-
-
-
                 Booking b = new Booking { PersonID = p.PersonID, FlightNo = f.FlightNo, Flight = f, Passenger = p, SalePrice = 100 };
-                //Booking c = new Booking { PersonID = p3.PersonID, FlightNo = f.FlightNo, Flight = f, Passenger = p3, SalePrice = 200 };
-                //Booking d = new Booking { PersonID = p2.PersonID, FlightNo = f1.FlightNo, Flight = f1, Passenger = p2, SalePrice = 200 };
-
-
 
                 ctx.BookingSet.Add(b);
-                //ctx.BookingSet.Add(c);
-                //ctx.BookingSet.Add(d);
-
-
-                //ctx.Entry(p).Collection(x => x.BookingSet).Load();
-                // lazy loading
-
-
-
-
-
-                //ctx.BookingSet.Add(new Booking { Flight = f5, Passenger = p2, PersonID = p2.PersonID, FlightNo = f5.FlightNo, SalePrice = 758 });
-
 
                 ctx.SaveChanges();
 
-    
             }
         }
         public static void NewPassengers()
@@ -137,5 +112,15 @@ namespace WebAPITuto
                 ctx.SaveChanges();
             }
         }
+
+        public static void CheckState(Flight flight)
+        {
+            Boeing toCheck = (Boeing)flight;
+            string canbuyticket = toCheck.CanBuyTickets();
+
+            Console.WriteLine(canbuyticket);
+
+        }
     }
 }
+

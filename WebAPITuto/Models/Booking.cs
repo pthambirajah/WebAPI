@@ -7,10 +7,9 @@ namespace WebAPITuto.Models
 {
     public class Booking
     {
-        // flight - passenger
         public int FlightNo { get; set; }
         public int PersonID { get; set; }
-
+        //Final price that the passenger paid to get this ticket
         public double SalePrice { get; set; }
 
         public virtual Flight Flight { get; set; }

@@ -25,6 +25,7 @@ namespace WebAPITuto.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Booking>>> GetBookingSet()
         {
+            //Get all the bookings with corresponding flights and passengers
             var f =  await _context.BookingSet.Include(x => x.Flight).Include(x => x.Passenger).ToListAsync();
 
             //This is used to stop from escalating
@@ -42,13 +43,16 @@ namespace WebAPITuto.Controllers
         [HttpGet("Destination/{destination}")]
         public List<Ticket> GetAllBookingsDestination(string Destination)
         {
+            //We get all the flights going to the destination giver in parameter
             var flight = from f in _context.FlightSet
                          where f.Destination.Equals(Destination)
                          select f;
             
+            //Using a new model to gather information
             var FinalTickets = new List<Ticket>();
 
-         foreach (Boeing f in flight)
+            //Get informations through our booking set
+         foreach (Flight f in flight)
             {
                 var bookings = (from b in _context.BookingSet
                                 where b.FlightNo == f.FlightNo
@@ -62,6 +66,7 @@ namespace WebAPITuto.Controllers
         }
 
         // GET: api/Bookings/5
+        //Default method to access one booking
         [HttpGet("{id}")]
         public async Task<ActionResult<Booking>> GetBooking(int id)
         {
@@ -78,6 +83,7 @@ namespace WebAPITuto.Controllers
         // PUT: api/Bookings/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        //Default method to update one booking
         [HttpPut("{id}")]
         public async Task<IActionResult> PutBooking(int id, Booking booking)
         {
@@ -113,15 +119,17 @@ namespace WebAPITuto.Controllers
         [HttpPost]
         public async Task<ActionResult<Booking>> PostBooking(Booking booking)
         {
-            
+            //Adding the given booking to our booking set.
             _context.BookingSet.Add(booking);
             
            try
             {
+                //Try to save the new booking
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
+                //If the same guy has already reserved the same flight we return an error
                 if (BookingExists(booking.FlightNo))
                 {
                     if (BookingExists(booking.PersonID))
@@ -139,6 +147,7 @@ namespace WebAPITuto.Controllers
         }
 
         // DELETE: api/Bookings/5
+        //Default method to delete a booking
         [HttpDelete("{id}")]
         public async Task<ActionResult<Booking>> DeleteBooking(int id)
         {

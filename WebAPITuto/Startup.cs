@@ -20,15 +20,11 @@ namespace WebAPITuto
         }
 
         public IConfiguration Configuration { get; }
-        public static string ConnectionString { get; set; } = @"Server=(localDB)\MSSQLLocalDB;Database=WWWings_2020Step10;Trusted_Connection=True;MultipleActiveResultSets=True;App=WebAPITuto";
+        public static string ConnectionString { get; set; } = @"Server=(localDB)\MSSQLLocalDB;Database=WWWings_2020Step12;Trusted_Connection=True;MultipleActiveResultSets=True;App=WebAPITuto";
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddDbContext<TodoContext>();
-
-           // services.AddDbContext<UserDbContext>(opts =>
-         //opts.UseInMemoryDatabase("userDB"));
 
             services.AddControllers();
         }

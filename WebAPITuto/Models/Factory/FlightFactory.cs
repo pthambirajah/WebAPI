@@ -5,8 +5,10 @@ using System.Threading.Tasks;
 
 namespace WebAPITuto.Models
 {
-    public abstract class FlightFactory
+    //public abstract class FlightFactory
+    abstract class FlightFactory
     {
-        public abstract Flight GetFlight();
+        public abstract Flight CreateFlight();
+
     }
 }

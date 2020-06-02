@@ -22,6 +22,8 @@ namespace WebAPITuto.Controllers
 
         // GET: api/Statistics
         //Get all available flights
+        //Exists also in flight controller
+        //Get only flights with available seats
         [HttpGet]
         public async Task<ActionResult<List<Flight>>> GetFlightSet()
         {
@@ -44,16 +46,20 @@ namespace WebAPITuto.Controllers
         }
 
         // GET: api/Statistics/5
+        //Calculate the average price of the tickets we sold for a destination
         [HttpGet("AveragePrice/{destination}")]
         public double GetDestinationAveragePrice(string Destination)
         {
+            //Get all the flights for the given destination
             var flight = from f in _context.FlightSet
                          where f.Destination.Equals(Destination)
                          select f;
 
             double TotalSalePrice = 0;
             int NumberOfBookings = 0;
-           foreach(Boeing f in flight)
+
+            //Double loop, sum up sale price from each bookings in each flights
+           foreach(Flight f in flight)
             {
                 var bookings = from b in _context.BookingSet
                                where b.FlightNo == f.FlightNo
@@ -64,7 +70,7 @@ namespace WebAPITuto.Controllers
                     NumberOfBookings++;
                 }
             }
-
+            //Total turnover divided by the number of bookings
             double AveragePrice = TotalSalePrice / NumberOfBookings;
             return AveragePrice;
         }
@@ -72,21 +78,23 @@ namespace WebAPITuto.Controllers
         // Get: api/Statistics/TotalSales/{id}
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        //Get total turnover of a flight
         [HttpGet("TotalSales/{id}")]
         public double GetFlightTotalSales(int id)
         {
             var flight = _context.FlightSet.Find(id);
-
+            //Return 0 if the flight doesn't exist
             if (flight == null)
             {
                 return 0;
             }
-
+            //Get all the bookings of this flights
             var bookings = from b in _context.BookingSet
                            where b.FlightNo == id
                            select b;
 
             double TotalSales=0;
+            //Sum up the sale price and return the result
             foreach(Booking price in bookings)
             {
                 TotalSales += price.SalePrice;
@@ -96,37 +104,5 @@ namespace WebAPITuto.Controllers
 
         }
 
-        // POST: api/Statistics
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPost]
-        public async Task<ActionResult<Flight>> PostFlight(Flight flight)
-        {
-            _context.FlightSet.Add(flight);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetFlight", new { id = flight.FlightNo }, flight);
-        }
-
-        // DELETE: api/Statistics/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<Flight>> DeleteFlight(int id)
-        {
-            var flight = await _context.FlightSet.FindAsync(id);
-            if (flight == null)
-            {
-                return NotFound();
-            }
-
-            _context.FlightSet.Remove(flight);
-            await _context.SaveChangesAsync();
-
-            return flight;
-        }
-
-        private bool FlightExists(int id)
-        {
-            return _context.FlightSet.Any(e => e.FlightNo == id);
-        }
     }
 }
