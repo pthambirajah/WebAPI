@@ -40,6 +40,7 @@ namespace WebAPITuto
                     webBuilder.UseStartup<Startup>();
                 });
 
+        //Method used to create new database.
         private static void CreateDatabase()
         {
             using (var ctx = new TodoContext())
@@ -52,6 +53,7 @@ namespace WebAPITuto
             }
         }
 
+        //Method used to add new flights.
         private static void NewFlights()
         {
             using (var ctx = new TodoContext())
@@ -60,11 +62,13 @@ namespace WebAPITuto
 
                 Boeing boeing = (Boeing)flightFactory.CreateFlight();
 
+                //Check what is the state of the journey
                 CheckState(boeing);
 
-                //flightFactory = new BoeingFactory("MTX", "BKK", new DateTime(2020, 07, 1), 199);
+                //open the sales of this particular boeing
                 boeing.OpenSales("MTX", "BKK", new DateTime(2020, 07, 1), 199);
 
+                //check the state after the opening of the sales
                 CheckState(boeing);
 
                 ctx.FlightSet.Add(boeing);
@@ -72,7 +76,7 @@ namespace WebAPITuto
                 ctx.SaveChanges();
             }
         }
-
+        //Method used to add new bookings.
         public static void NewBooking()
         {
             using (var ctx = new TodoContext())
@@ -94,6 +98,8 @@ namespace WebAPITuto
 
             }
         }
+
+        //Method used to add new passengers.
         public static void NewPassengers()
         {
             using (var ctx = new TodoContext())
@@ -113,13 +119,12 @@ namespace WebAPITuto
             }
         }
 
+        //method used to check the state of the sales
         public static void CheckState(Flight flight)
         {
             Boeing toCheck = (Boeing)flight;
             string canbuyticket = toCheck.CanBuyTickets();
-
             Console.WriteLine(canbuyticket);
-
         }
     }
 }

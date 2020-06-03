@@ -37,19 +37,18 @@ namespace WebAPITuto.Models
             _seats = seats;
             _basePrice = basePrice;
 
-            //As soon as we have all the information, flight tickets could be sold.
+            //As soon as we have all the information, flight tickets can be sold.
             this.TransitionTo(new SaleState());
         }
+
+        //Method used to open the sales.
         public void OpenSales(string departure, string destination, DateTime date, short? basePrice)
         {
-
             _departure = departure;
             _destination = destination;
             _date = date;
-            
             _basePrice = basePrice;
-
-            //As soon as we have all the information, flight tickets could be sold.
+            //As soon as we have all the information, flight tickets can be sold.
             this.TransitionTo(new SaleState());
         }
 
@@ -57,6 +56,7 @@ namespace WebAPITuto.Models
         {
             this.TransitionTo(state);
         }
+
         //This methods allows us to change the state.
         public void TransitionTo(State state)
         {
